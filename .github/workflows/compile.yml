@@ -13,8 +13,8 @@ jobs:
           python-version: 3.7
       - name: Install OS packages
         run: |
-          apt-get update
-          apt-get install gcc-arm-none-eabi
+          sudo apt-get update
+          sudo apt-get install gcc-arm-none-eabi
           export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
           export GNUARMEMB_TOOLCHAIN_PATH="~/gnuarmemb"
       - name: Install python packages
