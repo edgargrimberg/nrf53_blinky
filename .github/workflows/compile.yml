@@ -19,7 +19,7 @@ jobs:
           export GNUARMEMB_TOOLCHAIN_PATH="~/gnuarmemb"
       - name: Install python packages
         run: |
-          python -m pip install -upgrade pip
+          python -m pip install --upgrade pip
           pip3 install --user west
       - name: Get nrf connect
         run: |
