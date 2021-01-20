@@ -21,6 +21,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip3 install --user west
+          export PATH=$PATH:~/.local/bin
       - name: Get nrf connect
         run: |
           west init -m https://github.com/nrfconnect/sdk-nrf --mr master ncs
