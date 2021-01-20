@@ -11,17 +11,19 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Install OS packages
+      - name: Install cross compiler
         run: |
-          sudo apt-get update
-          sudo apt-get install gcc-arm-none-eabi
-          export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
-          export GNUARMEMB_TOOLCHAIN_PATH="~/gnuarmemb"
+          cd $HOME
+          curl -O -L https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          tar xf ./gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          echo "ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb" >> $GITHUB_ENV
+          echo "GNUARMEMB_TOOLCHAIN_PATH="$HOME/gcc-arm-none-eabi-10-2020-q4-major" >> $GITHUB_ENV
+          echo "$HOME/gcc-arm-none-eabi-10-2020-q4-major/bin" >> $GITHUB_PATH
       - name: Install python packages
         run: |
           python -m pip install --upgrade pip
           pip3 install --user west
-          export PATH=$PATH:~/.local/bin
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Get nrf connect
         run: |
           west init -m https://github.com/nrfconnect/sdk-nrf --mr master ncs
