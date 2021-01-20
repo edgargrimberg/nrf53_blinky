@@ -1,0 +1,36 @@
+name: Compile
+
+on: pull_request
+
+jobs:
+  compilation:
+    runs-on: ubuntu-latest
+    name: Compilation of the pull request
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install OS packages
+        run: |
+          apt-get update
+          apt-get install gcc-arm-none-eabi
+          export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
+          export GNUARMEMB_TOOLCHAIN_PATH="~/gnuarmemb"
+      - name: Install python packages
+        run: |
+          python -m pip install -upgrade pip
+          pip3 install --user west
+      - name: Get nrf connect
+        run: |
+          west init -m https://github.com/nrfconnect/sdk-nrf --mr master ncs
+          cd ncs
+          west update
+          west zephyr-export
+          cd ..        
+      - name: Install additional python packages
+        run: |
+          pip3 install --user -r ncs/zephyr/scripts/requirements.txt
+          pip3 install --user -r ncs/scripts/requirements.txt
+          cd ncs
+          source zephyr/zephyr-env.sh
