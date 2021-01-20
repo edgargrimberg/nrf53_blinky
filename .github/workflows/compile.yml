@@ -17,7 +17,7 @@ jobs:
           curl -O -L https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
           tar xf ./gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
           echo "ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb" >> $GITHUB_ENV
-          echo "GNUARMEMB_TOOLCHAIN_PATH="$HOME/gcc-arm-none-eabi-10-2020-q4-major" >> $GITHUB_ENV
+          echo "GNUARMEMB_TOOLCHAIN_PATH=$HOME/gcc-arm-none-eabi-10-2020-q4-major" >> $GITHUB_ENV
           echo "$HOME/gcc-arm-none-eabi-10-2020-q4-major/bin" >> $GITHUB_PATH
       - name: Install python packages
         run: |
