@@ -14,11 +14,13 @@ jobs:
       - name: Install cross compiler
         run: |
           cd $HOME
-          curl -O -L https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
-          tar xf ./gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          curl -O -L https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+          tar xf ./gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
           echo "ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb" >> $GITHUB_ENV
-          echo "GNUARMEMB_TOOLCHAIN_PATH=$HOME/gcc-arm-none-eabi-10-2020-q4-major" >> $GITHUB_ENV
-          echo "$HOME/gcc-arm-none-eabi-10-2020-q4-major/bin" >> $GITHUB_PATH
+          echo "GNUARMEMB_TOOLCHAIN_PATH=$HOME/gcc-arm-none-eabi-9-2020-q2-update" >> $GITHUB_ENV
+          echo "$HOME/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
+          sudo apt-get update
+          sudo apt-get install ninja-build
       - name: Install python packages
         run: |
           python -m pip install --upgrade pip
@@ -26,15 +28,16 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Get nrf connect
         run: |
-          west init -m https://github.com/nrfconnect/sdk-nrf --mr master ncs
-          cd ncs
+          cd ..
+          west init -m https://github.com/nrfconnect/sdk-nrf --mr v1.4.2 .
           west update
           west zephyr-export
-          cd ..        
       - name: Install additional python packages
+        if: steps.cache-pip.outputs.cache-hit != 'true'
         run: |
-          pip3 install --user -r ncs/zephyr/scripts/requirements.txt
-          pip3 install --user -r ncs/nrf/scripts/requirements.txt
-          pip3 install --user -r ncs/bootloader/mcuboot/scripts/requirements.txt
-          cd ncs
-          source zephyr/zephyr-env.sh
+          pip3 install --user -r ../zephyr/scripts/requirements.txt
+          pip3 install --user -r ../nrf/scripts/requirements.txt
+          pip3 install --user -r ../bootloader/mcuboot/scripts/requirements.txt
+      - name: Compile with west
+        run: |
+          west build -b nrf5340dk_nrf5340_cpuapp        
