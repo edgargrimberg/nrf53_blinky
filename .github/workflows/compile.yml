@@ -15,19 +15,19 @@ jobs:
         uses: actions/cache@v2
         id: cache-compiler
         with:
-          path: $HOME/gcc-arm-none-eabi-9-2020-q2-update
+          path: ~/gcc-arm-none-eabi-9-2020-q2-update
           key: ${{ runner.os }}-gcc-arm-none-eabi-9-2020-q2-update
       - name: Install cross compiler
         if: steps.cache-compiler.outputs.cache-hit != 'true'
         run: |
-          cd $HOME
+          cd ~
           curl -O -L https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
           tar xf ./gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
       - name: Install ninja and setup the env
         run: |
           echo "ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb" >> $GITHUB_ENV
-          echo "GNUARMEMB_TOOLCHAIN_PATH=$HOME/gcc-arm-none-eabi-9-2020-q2-update" >> $GITHUB_ENV
-          echo "$HOME/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
+          echo "GNUARMEMB_TOOLCHAIN_PATH=~/gcc-arm-none-eabi-9-2020-q2-update" >> $GITHUB_ENV
+          echo "~/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
           sudo apt-get update
           sudo apt-get install ninja-build
       - name: Install python packages
