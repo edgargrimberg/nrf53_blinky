@@ -16,7 +16,7 @@ jobs:
         id: cache-compiler
         with:
           path: $HOME/gcc-arm-none-eabi-9-2020-q2-update
-          key: ${{ runner.os }}-gcc-9-2020-q2
+          key: ${{ runner.os }}-gcc-arm-none-eabi-9-2020-q2-update
       - name: Install cross compiler
         if: steps.cache-compiler.outputs.cache-hit != 'true'
         run: |
