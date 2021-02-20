@@ -1,16 +1,12 @@
-/*
- * Copyright (c) 2016 Intel Corporation
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
 #include <zephyr.h>
 #include <device.h>
 #include <devicetree.h>
 #include <drivers/gpio.h>
+#include <logging/log.h>
+LOG_MODULE_REGISTER(blinky, LOG_LEVEL_DBG);
 
 /* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS   1000
+#define SLEEP_TIME_MS   500
 
 /* The devicetree node identifier for the "led0" alias. */
 #define LED0_NODE DT_ALIAS(led0)
@@ -27,25 +23,40 @@
 #define FLAGS	0
 #endif
 
-void main(void)
+static const struct device *dev = NULL;
+
+static void timer_callback(struct k_timer *timer_id)
 {
-	const struct device *dev;
-	bool led_is_on = true;
-	int ret;
+    static bool is_led_on = true; 
+    gpio_pin_set(dev, PIN, (int)is_led_on);
+    is_led_on = !is_led_on;
+}
 
-	dev = device_get_binding(LED0);
-	if (dev == NULL) {
-		return;
-	}
+void main(void)
+{    
+    int ret = 0;
+    struct k_timer my_timer;
 
-	ret = gpio_pin_configure(dev, PIN, GPIO_OUTPUT_ACTIVE | FLAGS);
-	if (ret < 0) {
-		return;
-	}
+    LOG_MODULE_DECLARE(blinky, LOG_LEVEL_DBG);
 
-	while (1) {
-		gpio_pin_set(dev, PIN, (int)led_is_on);
-		led_is_on = !led_is_on;
-		k_msleep(SLEEP_TIME_MS);
-	}
+    dev = device_get_binding(LED0);
+    if (dev == NULL) 
+    {
+        LOG_ERR("Unable to get device binding for LED0");
+    }
+
+    ret = gpio_pin_configure(dev, PIN, GPIO_OUTPUT_ACTIVE | FLAGS);
+    if (ret != 0)
+    {
+        LOG_ERR("Unable to configure PIN0 as output");
+    }
+
+
+    k_timer_init(&my_timer, timer_callback, NULL);
+    k_timer_start(&my_timer, K_MSEC(0), K_MSEC(SLEEP_TIME_MS));
+
+    while (1)
+    {
+        k_msleep(SLEEP_TIME_MS);
+    }
 }
