@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(arm-none-eabi-gdb) Launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "request": "launch",
+            "executable": "${command:cmake.launchTargetPath}",
+            "interface": "swd",
+            "svdFile": "${workspaceFolder}/../modules/hal/nordic/nrfx/mdk/nrf5340_application.svd",
+            "device": "nRF5340_xxAA_APP",
+            "runToMain": true,
+            "preLaunchCommands": [
+                "load"
+            ],
+            "preRestartCommands": [
+                "load"
+            ]
+        }
+    ]
+}

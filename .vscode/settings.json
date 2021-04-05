@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "zephyr.h": "c"
+    },
+
+    "platformSettings.autoLoad": true,
+    "platformSettings.platforms": {
+        "darwin": {
+            "inherits":"default",
+            "nodes": {
+                "cortex-debug.JLinkGDBServerPath": "/Applications/SEGGER/JLink_V696/JLinkGDBServer",
+            }
+        },
+        "win32": {
+            "nodes": {
+                "cmake.generator": "MinGW Makefiles",
+                "cortex-debug.JLinkGDBServerPath": "C:/Program Files (x86)/SEGGER/JLink/JLinkGDBServerCL.exe"
+            }
+        }
+    },
+    "cortex-debug.armToolchainPrefix": "arm-none-eabi"
+}
