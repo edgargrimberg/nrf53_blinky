@@ -3,6 +3,7 @@
 #include <devicetree.h>
 #include <drivers/gpio.h>
 #include <logging/log.h>
+#include <kernel.h>
 LOG_MODULE_REGISTER(blinky, LOG_LEVEL_DBG);
 
 /* The devicetree node identifier for the "led0" alias. */
@@ -55,8 +56,8 @@ void main(void)
     Blinky b;
     b.Start(1000);
 
-    while (1)
-    {
-        k_msleep(500);
-    }
+    //deadlock here, to prevent application exit the main function
+    struct k_sem my_sem;
+    k_sem_init(&my_sem, 0, 1);
+    k_sem_take(&my_sem, K_FOREVER);
 }
